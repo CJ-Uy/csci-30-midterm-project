@@ -9,7 +9,7 @@ class GuitarString:
         Create a guitar string of the given frequency, using a sampling rate of 44100 Hz
         '''
         self.capacity = math.ceil(44100/frequency)
-        self.buffer =  [None] * self.capacity
+        self.buffer =  RingBuffer(self.capacity)
         self.tickCount = 0
        
     @classmethod
@@ -40,7 +40,7 @@ class GuitarString:
         '''
         self.buffer.enqueue(0.996 * 0.5 * (self.buffer.dequeue() + self.buffer.peek()))
         self.tickCount += 1
-       
+
     def sample(self) -> float:
         '''
         Return the current sample
