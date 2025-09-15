@@ -15,22 +15,28 @@ class RingBuffer:
         '''
         Return number of items currently in the buffer
         '''
-        if self._rear >= self._front:
+        if self._rear > self._front:
             return self._rear - self._front
-        else:
+        elif self._rear < self._front:
             self._rear + self.MAX_CAP - self._front
+        else:
+            # If empty
+            if self.buffer[self._front] is None:
+                return 0
+            else:
+                return self.MAX_CAP
 
     def is_empty(self) -> bool:
         '''
         Is the buffer empty (size equals zero)?
         '''
-        return self.buffer[self._front] is None
+        return self.size() == 0
         
     def is_full(self) -> bool:
         '''
         Is the buffer full (size equals capacity)?
         '''
-        return self.buffer[self._front] is not None and self._front == self._rear
+        return self.size() == self.MAX_CAP
 
     def enqueue(self, x: float):
         '''
