@@ -59,8 +59,11 @@ class RingBuffer:
         # Loop front to the first index if it's greater than the cap
         if self._front >= self.MAX_CAP:
             self._front = 0
-            
-        return self.buffer[self._front-1]
+        
+        temp = self.buffer[self._front - 1]
+        self.buffer[self._front - 1] = None
+        
+        return temp
 
     def peek(self) -> float:
         '''
