@@ -38,14 +38,18 @@ class GuitarString:
         '''
         Advance the simulation one time step by applying the Karplus--Strong update
         '''
-        self.buffer.enqueue(0.996 * 0.5 * (self.buffer.dequeue() + self.buffer.peek()))
-        self.tickCount += 1
+        if not self.buffer.is_empty:
+            self.buffer.enqueue(0.996 * 0.5 * (self.buffer.dequeue() + self.buffer.peek()))
+            self.tickCount += 1    
 
     def sample(self) -> float:
         '''
         Return the current sample
         '''
-        return self.buffer.peek()
+        if not self.buffer.is_empty:
+            return self.buffer.peek()
+        else:
+            return 0
 
     def time(self) -> int:
         '''
