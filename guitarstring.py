@@ -10,6 +10,10 @@ class GuitarString:
         '''
         self.capacity = math.ceil(44100/frequency)
         self.buffer =  RingBuffer(self.capacity)
+        
+        for _ in range(self.capacity):
+            self.buffer.enqueue(0)
+    
         self.tickCount = 0
        
     @classmethod
@@ -38,19 +42,15 @@ class GuitarString:
         '''
         Advance the simulation one time step by applying the Karplus--Strong update
         '''
-        if not self.buffer.is_empty:
-            self.buffer.enqueue(0.996 * 0.5 * (self.buffer.dequeue() + self.buffer.peek()))
-            self.tickCount += 1    
+        self.buffer.enqueue(0.996 * 0.5 * (self.buffer.dequeue() + self.buffer.peek()))
+        self.tickCount += 1    
 
     def sample(self) -> float:
         '''
         Return the current sample
         '''
-        if not self.buffer.is_empty:
-            return self.buffer.peek()
-        else:
-            return 0
-
+        return self.buffer.peek()
+        
     def time(self) -> int:
         '''
         Return the number of ticks so far
