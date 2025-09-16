@@ -1,14 +1,16 @@
 from guitarstring import GuitarString
 from stdaudio import play_sample
 import stdkeys
+import math
 
 if __name__ == "__main__":
     # initialize window
     stdkeys.create_window()
 
     keyboard = "q2we4r5ty7u8i9op-[=]"
-    CONCERT = [i for i in range(220, 660, (660 - 220) // (20 - 1))]
-    guitar_strings = [GuitarString(440 * 1.059463 ** (i-12)) for i in range(len(keyboard) + 1)]
+    guitar_strings = []
+    for i in range(len(keyboard)):
+        guitar_strings.append(GuitarString(440 * 1.059463 ** (i - 12)))
 
     n_iters = 0
     while True:
@@ -33,7 +35,12 @@ if __name__ == "__main__":
             sample += i.sample()
         
         # play the sample on standard audio
-        play_sample(sample)
+        if -1 < sample < 1:
+            play_sample(sample)
+        elif sample > 1:
+            play_sample(1)
+        else:
+            play_sample(-1)
 
         # advance the simulation of each guitar string by one step
         for string in guitar_strings:
