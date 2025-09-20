@@ -2,6 +2,7 @@ from guitarstring import GuitarString
 from stdaudio import play_sample
 import stdkeys
 import math
+from ringbuffer import RingBuffer
 
 if __name__ == "__main__":
     # initialize window
@@ -9,8 +10,10 @@ if __name__ == "__main__":
 
     keyboard = "q2we4r5ty7u8i9op-[=]"
     guitar_strings = []
+    times = []
     for i in range(len(keyboard)):
         guitar_strings.append(GuitarString(440 * 1.059463 ** (i - 12)))
+        times.append(float('inf'))
 
     n_iters = 0
     while True:
@@ -27,12 +30,22 @@ if __name__ == "__main__":
             key = stdkeys.next_key_typed()
             if key in keyboard:
                 string_index = keyboard.index(key)
-                guitar_strings[string_index].pluck()
+                curr = guitar_strings[string_index]
+                times[string_index] = curr.time()
+                curr.pluck()
 
         # compute the superposition of samples
-        sample = 0 
-        for i in guitar_strings:
-            sample += i.sample()
+        sample = 0
+        for i in range(len(guitar_strings)):
+            curr = guitar_strings[i]
+            if curr.time() - times[i] > 100000:
+                print("Stopped")
+                temp = RingBuffer(curr.capacity)
+                for _ in range(curr.capacity):
+                    temp.enqueue(0)
+                curr.buffer = temp
+                times[i] = float('inf')
+            sample += curr.sample()
         
         # play the sample on standard audio
         if -1 < sample < 1:
