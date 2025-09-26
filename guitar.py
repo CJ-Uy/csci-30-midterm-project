@@ -4,6 +4,7 @@ import stdkeys
 import math
 from ringbuffer import RingBuffer
 
+
 if __name__ == "__main__":
     # initialize window
     stdkeys.create_window()
@@ -11,6 +12,8 @@ if __name__ == "__main__":
     keyboard = "q2we4r5ty7u8i9op-[=]"
     guitar_strings = []
     times = []
+    active_strings = set()
+
     for i in range(len(keyboard)):
         guitar_strings.append(GuitarString(440 * 1.059463 ** (i - 12)))
         times.append(float('inf'))
@@ -33,6 +36,7 @@ if __name__ == "__main__":
                 curr = guitar_strings[string_index]
                 times[string_index] = curr.time()
                 curr.pluck()
+                active_strings.add(curr)
 
         # compute the superposition of samples
         sample = 0
@@ -40,6 +44,7 @@ if __name__ == "__main__":
             curr = guitar_strings[i]
             if curr.time() - times[i] > 100000:
                 print("Stopped")
+                active_strings.remove(curr)
                 temp = RingBuffer(curr.capacity)
                 for _ in range(curr.capacity):
                     temp.enqueue(0)
@@ -56,5 +61,5 @@ if __name__ == "__main__":
             play_sample(-1)
 
         # advance the simulation of each guitar string by one step
-        for string in guitar_strings:
+        for string in active_strings:
             string.tick()
