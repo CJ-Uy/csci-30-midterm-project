@@ -14,7 +14,7 @@ class GuitarString:
         for _ in range(self.capacity):
             self.buffer.enqueue(0)
     
-        self.tickCount = 0
+        self.tick_count = 0
        
     @classmethod
     def make_from_array(cls, init: list[int]):
@@ -42,8 +42,8 @@ class GuitarString:
         '''
         Advance the simulation one time step by applying the Karplus--Strong update
         '''
-        self.buffer.enqueue(0.996 * 0.5 * (self.buffer.dequeue() + self.buffer.peek()))
-        self.tickCount += 1    
+        self.buffer.enqueue(0.498 * (self.buffer.dequeue() + self.buffer.peek()))
+        self.tick_count += 1
 
     def sample(self) -> float:
         '''
@@ -55,4 +55,4 @@ class GuitarString:
         '''
         Return the number of ticks so far
         '''
-        return self.tickCount
+        return self.tick_count
