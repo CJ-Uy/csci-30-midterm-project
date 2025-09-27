@@ -31,7 +31,7 @@ if __name__ == "__main__":
         # check if the user has typed a key; if so, process it
         if stdkeys.has_next_key_typed():
             key = stdkeys.next_key_typed()
-            if key in keyboard:
+            if key in keyboard and len(key) != 0:
                 string_index = keyboard.index(key)
                 curr = guitar_strings[string_index]
                 times[string_index] = curr.time()
