@@ -29,9 +29,8 @@ if __name__ == "__main__":
         # check if the user has typed a key; if so, process it
         if stdkeys.has_next_key_typed():
             key = stdkeys.next_key_typed()
-            if key in keyboard and len(key) != 0:
-                string_index = keyboard.index(key)
-                string = guitar_strings[string_index]
+            if key and key in keyboard:
+                string = guitar_strings[keyboard.index(key)]
                 string.pluck()
                 active_strings.add(string)
 
