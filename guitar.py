@@ -40,7 +40,7 @@ if __name__ == "__main__":
         for i in range(len(guitar_strings)):
             string = guitar_strings[i]
             # if it has been too long since the string was last played
-            if string.time() > 100000:
+            if string.time() > 300000:
                 active_strings.remove(string)
                 # create an empty ring buffer
                 reset = RingBuffer(string.capacity)
